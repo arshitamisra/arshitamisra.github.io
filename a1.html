@@ -4,15 +4,93 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Arshita's HCDE 439 Physical Computing Page!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
-    <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
+    <h1>Arshita's Assignment 1!</h1>
+    <br>
+    <h2>Circuit</h2>
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="Circuit.jpeg" />
+        <p>For the circuit, I used Red, Green and Yellow LEDs.
+          I used a resistance of 220 Ohm for each LED because after 
+          doing the calculations, I found that the maximum Resistance I would need is 
+          160 ohms. 220 was the closest standard resistance value.
+        </p>
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="BlinkingCircuit.gif" />
+      </div>
     </div>
+    <br>
+    <h2>Schematic and Resistance</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img src="Schematic.jpeg" />
+      </div>
+      <div class="image-wrapper">
+
+        <img src="Calculation.jpeg" />
+        <p>
+          Red, Yellow and Green all needed a minimum of 160 Ohm.
+        </p>
+
+      </div>
+    </div>
+    The resistors used for each LED are 220 Ohm. The exact resistance needed was 160 Ohm, and the closest to that was 220 Ohm.
+      <br>
+      <br>
+        <h2>Additional Questions</h2>
+        1. <img src="Graph.jpeg" alt="Graph of Voltage across LEDs">
+        <br>
+        2. We should have been able to connect 14 LEDs at the same time since the Arduino has 14 pins. But 14 x 20mA = 280mA which is greater than the maximum limit of 200mA. So in reality, we will be able to connect 10 LEDs to the Arduino at the same time.
+        <br>
+        4. I had to reduce the time between blinks to 10ms until I could no longer tell they were blinking. 
+      </p>
+      <br>
+    <h2>Code</h2>
+        <code>
+          <pre>
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin 11 as an output.
+  pinMode(11, OUTPUT);
+
+  // initialize digital pin 12 as an output.
+  pinMode(12, OUTPUT);
+
+  // initialize digital pin 13 as an output.
+  pinMode(13, OUTPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  digitalWrite(11, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(11, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);                      // wait for a second
+
+  digitalWrite(12, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(12, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);
+
+  digitalWrite(13, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(13, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);  
+}
+          </pre>
+        </code>
+    
   </body>
 </html>
