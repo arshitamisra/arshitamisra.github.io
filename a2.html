@@ -4,15 +4,114 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Arshita's HCDE 439 Physical Computing Page!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
-    <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
+    <h1>Arshita's Assignment 2!</h1>
+    <br>
+    <h2>Circuit</h2>
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="Circuit2.jpeg" />
+        <p>For the circuit, I used Blue, Red, RGB and Yellow LEDs.
+          I used a resistance of 220 Ohm for the Red, Yellow LEDs and the Red and Green prongs of the RGB LED because after 
+          doing the calculations, I found that the maximum Resistance I would need is 
+          160 ohms. 220 was the closest standard resistance value. For the Blue LED I found that the maximum resistance I would need for the Blue LED is 85 Ohm.
+          I used 100 Ohm for it because it was the closst standard to that resistance value. 
+        </p>
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="FadingCircuit.gif" />
+      </div>
     </div>
+    <br>
+    <h2>Schematic and Resistance</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img src="Schematic2.jpeg" />
+      </div>
+      <div class="image-wrapper">
+
+        <img src="Calculation.jpeg" />
+        <img src="Calculation2.jpeg"/>
+        <img src="Calculation3.jpeg" />
+        <p>
+          Red, Yellow and Green all needed a minimum of 160 Ohm. Blue needs a minimum of 85 Ohm. 
+          The button needs a minimum of 250 Ohm, and while there is a close standard, we use a 10k Ohm resistor to limit the current to be 0.5 mA just to be really really safe and draw less power so that the Arduino does not blow up. It is also standard to use a 10k resistor for buttons. 
+        </p>
+
+      </div>
+    </div>
+    The resistors used for each Red, Yellow LEDs and Red, Green prongs are 220 Ohm. The exact resistance needed was 160 Ohm. The resistors used for the Blue LED are 100 Ohm.
+      <br>
+      <br>
+        <h2>Additional Questions</h2>
+        1. <img src="Graph2.jpeg" alt="Graph of Voltage across analogWrite() LEDs">
+        <br>
+      <img src="A2Question2.jpeg"/>
+      <p>My circuit would run for 30 hours if powered by a 1200 mAh battery.</p>
+      <br>
+    <h2>Code</h2>
+        <code>
+          <pre>
+            const int red = 6;
+            const int green = 9;
+            const int blue = 11;
+            
+            void setup() {
+              // put your setup code here, to run once:
+              pinMode(red, OUTPUT);
+              pinMode(green, OUTPUT);
+              pinMode(blue, OUTPUT);
+              pinMode(13, OUTPUT);
+              pinMode(2, OUTPUT);
+              pinMode(4, OUTPUT);
+              pinMode(12, INPUT);
+            }
+            
+            void loop() {
+            
+              while (digitalRead(12) == HIGH) {
+            
+                digitalWrite(13, HIGH);
+                digitalWrite(4, HIGH);
+                digitalWrite(2, HIGH);
+            
+                // Fade in Red and fade out Green
+                for (int i = 0; i <= 255; i++) {
+                  analogWrite(red, i);       // Increase Red brightness
+                  analogWrite(green, 255 - i); // Decrease Green brightness
+                  delay(10); // Small delay for smooth fading
+                }
+            
+                // Fade in Blue and fade out Red
+                for (int i = 0; i <= 255; i++) {
+                  analogWrite(blue, i);      // Increase Blue brightness
+                  analogWrite(red, 255 - i); // Decrease Red brightness
+                  delay(10); // Small delay for smooth fading
+                }
+            
+                // Fade in Green and fade out Blue
+                for (int i = 0; i <= 255; i++) {
+                  analogWrite(green, i);     // Increase Green brightness
+                  analogWrite(blue, 255 - i); // Decrease Blue brightness
+                  delay(10); // Small delay for smooth fading
+                }
+            
+                digitalWrite(13, LOW);
+                digitalWrite(4, LOW);
+                digitalWrite(2, LOW);
+              }
+            }
+          </pre>
+        </code>
   </body>
 </html>
