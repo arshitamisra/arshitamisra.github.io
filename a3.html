@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Arshita's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Arshita's Assignment 3!</h1>
+    <br>
+    <h2>Circuit</h2>
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="Circuit3.jpeg" />
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="LCDCircuit.gif" />
+      </div>
+    </div>
+    <br>
+    <h2>Schematic and Resistance</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img src="Schematic3.jpeg" />
+      </div>
+      <div class="image-wrapper">
+
+        <img src="Calculation.jpeg" />
+        <p>
+          Red LED needed a minimum of 160 Ohm. The resistors used for red LED are 220 Ohm. The exact resistance needed was 160 Ohm, and the closest to that was 220 Ohm.
+          <br>
+        </p>
+        <img src="Calculation4.jpeg"/>
+
+      </div>
+    </div>
+    
+      <br>
+        <h2>Additional Questions</h2>
+        1. We can connect the voltage divider to either R1 or R2 its effect would just change based on the placement. If the sensor value should increase with light intensity then photoresistor should be R1 and vice-versa.
+        <img src="A3AQ1.jpeg" alt="Answer to additional question 1">
+        
+        <br>
+        2. <img src="Graph3.jpeg" alt="Graph of Voltage vs Time of the voltage divider at V-measure">
+        <br>
+        3. Current map function: My sensorValue comes from analogRead(), so it's a 10-bit value (range: 0 to 1023). I constrain the value to stay between 200 and 900. 
+        I map this constrained range to the output range:
+        Input range: 200 (darkest, brightest LED) to 900 (brightest, dimmest LED).
+        Output range: 255 (fully bright LED) to 0 (LED off).   
+        
+        Updated map function: If analogRead() changes to a 16-bit ADC, the range becomes 0 to 65535 instead of 0 to 1023.
+        If analogWrite() changes to 10-bit PWM, the range becomes 0 to 1023 instead of 0 to 255.
+        This updates my constrain range to: Input range (from analogRead()): Constrained to 13,107 (200 scaled to 16-bit) and 58,590 (900 scaled to 16-bit).
+        Output range (for analogWrite()): Adjusted to 0 to 1023 for 10-bit PWM.
+        
+        Updated map Code:
+        <code><pre>int brightness = map(constrain(sensorValue, 13107, 58590), 13107, 58590, 1023, 0);
+        </pre></code>
+      </p>
+      <br>
+    <h2>Code</h2>
+        <code>
+          <pre>
+            /*
+            LiquidCrystal Library
+          
+            The circuit:
+           * LCD RS pin to digital pin 12
+           * LCD Enable pin to digital pin 11
+           * LCD D4 pin to digital pin 5
+           * LCD D5 pin to digital pin 4
+           * LCD D6 pin to digital pin 3
+           * LCD D7 pin to digital pin 2
+           * LCD R/W pin to ground
+           * LCD VSS pin to ground
+           * LCD VDD pin to 5V
+           * 10K resistor:
+           * ends to +5V and ground
+           * wiper to LCD VO pin (pin 3)
+          
+          */
+          
+          // include the library code:
+          #include <LiquidCrystal.h>
+          
+          // initialize the library by associating any needed LCD interface pin
+          // with the arduino pin number it is connected to
+          const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+          LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+          
+          const int sensorPin = A5;
+          const int ledPin = 9;
+          
+          
+          void setup() {
+            // set up the LCD's number of columns and rows:
+            lcd.begin(16, 2);
+            // set up the Serial monitor
+            Serial.begin(9600);
+            // Print a starting message on the LCD
+            lcd.print("Game Of Light");
+            // Wait 5 seconds
+            delay(5000);
+            // Clear text on LCD
+            lcd.clear();
+            
+            // Set up pin for LED
+            pinMode(ledPin, OUTPUT);
+          
+            
+          }
+          
+          void loop() {
+            // Clear text LCD each time loop runs
+            lcd.clear();
+            // Read value from the sensor - photoresistor
+            int sensorValue = analogRead(sensorPin);
+          
+            // Map the photoresistor's realistically measured value (200-900) to range (0-255)
+            // Constrain the value of the photoresistor to always be between 200 and 900 due to the limits of reality.
+            int brightness = map(constrain(sensorValue, 200, 900), 200, 900, 255, 0);
+          
+            // Link the brightness to the LED
+            analogWrite(ledPin, brightness);
+          
+            // Position where to start printing on the LCD (row 0, column 0)
+            lcd.setCursor(0,0);
+            // Print informaiton on LCD
+            lcd.print("Brightness: ");
+            lcd.print(sensorValue);
+            
+            // Adjust LCD and serial monitor message based on light levels
+            if (brightness < 85) {
+              lcd.setCursor(0, 1);
+              lcd.print("It's very bright!");
+              Serial.println("High light detected, brightness reduced.");
+            } else if (brightness >= 85 && brightness < 170) {
+              lcd.setCursor(0, 1);
+              lcd.print("Nice and cozy :)");
+              Serial.println("Moderate light detected.");
+            } else {
+              lcd.setCursor(0, 1);
+              lcd.print("It's really dark!");
+              Serial.println("Low light detected, brightness increased.");
+              
+            }
+          
+            // Print the sensor and mapped values to the Serial Monitor
+            Serial.print("Sensor Value: ");
+            Serial.print(sensorValue);
+            Serial.print(" | Mapped Brightness: ");
+            Serial.println(brightness);
+          
+            // Add a small delay to stabilize readings
+            delay(200);
+          }
+          </pre>
+        </code>
+    
+  </body>
+</html>
