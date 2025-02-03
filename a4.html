@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Arshita's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Arshita's Assignment 4!</h1>
+    <br>
+    <h2>Circuit</h2>
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="Circuit4.jpeg" />
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="LibraryCircuit.gif" />
+      </div>
+    </div>
+    <br>
+    <h2>Schematic and Resistance</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img src="Schematic4.jpeg" />
+      </div>
+    </div>
+    
+      <br>
+        <h2>Additional Questions</h2>
+        
+        <br>
+
+        <br>
+        
+      </p>
+      <br>
+    <h2>Code</h2>
+        <code>
+          <pre>
+            #include <Servo.h>              // Library for the servo motor
+            #include <CapacitiveSensor.h>   // Library for the capacitive touch sensor
+            
+            
+            const int servoPin = 9;        // Servo motor pin
+            
+            Servo myServo;                  // Servo object
+            CapacitiveSensor capSensor = CapacitiveSensor(2, 4); // 1 megaohm resistor between pins 4 & 2, pin 4 is sensor 
+            
+            // Threshold for capacitive touch sensor
+            const int touchThreshold = 800;
+            
+            void setup() {
+                // Initialize the servo motor
+                myServo.attach(servoPin);
+                myServo.write(0);             // Set initial servo position
+            
+                // Start serial communication
+                Serial.begin(9600);
+            }
+            
+            void loop() {
+                // Read touch value from the capacitive sensor
+                long touchValue = capSensor.capacitiveSensor(30);
+            
+                // Print the touch value to the serial monitor for debugging
+                Serial.print("Touch Value: ");
+                Serial.println(touchValue);
+            
+                // if the touch value exceeds the threshold, move motor
+                if (touchValue > touchThreshold) {
+                myServo.write(360);          // Move servo to 360 degrees
+                } else {
+                myServo.write(0);
+                }
+            
+                delay(100); // Small delay
+            }   
+          </pre>
+        </code>
+    
+  </body>
+</html>
