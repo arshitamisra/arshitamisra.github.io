@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Arshita's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Arshita's Assignment 5!</h1>
+    <br>
+    <h2>Circuit</h2>
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="Circuit5.jpeg" />
+        The voltage at different points in the circuit varies. It is 12V at the positive end of the LED strip, and varies because it is controlled by MOSFET at the negative end of the strip. 
+        It also varies according at the MOSFET Drain (D) and is 0V at the MOSFET Source (S).
+        IT varies from 0-5V at the MOSFET Gate (G) because it comes from the PWM Arduino Pin 9.
+        At the VCC of the Ultrasonic Sensor it is 5V and at the Ultrasonic Sensor ground it is 0V.
+
+        <img src="CurrentCalculation.jpeg"/>
+        The transistor must handle at least 1.5A (as on the box of the LED to account for fluctuations etc. or 1.33 A, theoretically), which the DMT6009LCT MOSFET can easily handle as it is rated for 37.2A continuous on the datasheet.
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="LEDStripCircuit.gif" />
+      </div>
+    </div>
+    <br>
+    <h2>Schematic</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img src="Schematic5.jpeg" />
+      </div>
+    </div>
+    <br>
+        <h2>Code</h2>
+        <code>
+            <pre>
+                const int TRIG_PIN = 3; // Initialize pin that trig of sensor is connected to
+                const int ECHO_PIN = 6; // Initialize pin that echo of sensor is connected to
+                const int LED_PIN = 9;  // LED strip controlled by n-MOSFET
+                
+                void setup() {
+                pinMode(TRIG_PIN, OUTPUT);
+                pinMode(ECHO_PIN, INPUT);
+                pinMode(LED_PIN, OUTPUT);
+                Serial.begin(9600);
+                }
+                
+                void loop() {
+                // Send ultrasonic trigger pulse
+                digitalWrite(TRIG_PIN, LOW);
+                delayMicroseconds(2);
+                digitalWrite(TRIG_PIN, HIGH);
+                delayMicroseconds(10);
+                digitalWrite(TRIG_PIN, LOW);
+                
+                // Read echo time
+                long duration = pulseIn(ECHO_PIN, HIGH);
+                float distance = duration / 58.0;  // Convert to cm
+                
+                // Print distance for debugging
+                Serial.print("Distance: ");
+                Serial.print(distance);
+                Serial.println(" cm");
+                
+                // Adjust LED brightness based on distance
+                int brightness = map(distance, 200, 5, 255, 0);  // Closer = dimmer, farther = brighter between 5 and 200 cm. 
+                brightness = constrain(brightness, 0, 255);  // Keep within 0-255 range
+                
+                analogWrite(LED_PIN, brightness);  // Adjust LED brightness
+                
+                delay(200);  // Small delay to stabilize readings
+                }                
+            </pre>
+        </code>
+      <br>
+        <h2>Additional Questions</h2>
+        <br>
+        Question 1
+        <br>
+        The N-MOSFET can handle a maximum continuous current of 37.2A at 25°C and 29.8A at 100°C between pins 2 (Drain) and 3 (Source). It can also handle short bursts of up to 80A for very brief periods (around 10µs).
+        <br><br>
+        Question 2
+        <img src="Question2-5.jpeg"/>
+        This schematic includes an Arduino controlling a Yellow TT Motor (3-12V Gear Motor) DC motor using an DMT6009LCT MOSFET. A 1N5819 Schottky Barrier Rectifier flyback diode is placed across the motor terminals to protect against voltage spikes. Two capacitors (100µF and 1000µF) are connected between the 12V power supply and ground to smooth out voltage fluctuations and prevent noise interference. The MOSFET is chosen because it supports high current and logic-level operation, while the diode is rated for high voltage protection.
+        
+        <ul>
+            <li><a href="https://www.diodes.com/assets/Datasheets/DMT6009LCT.pdf" target="_blank">DMT6009LCT N-MOSFET Datasheet</a></li>
+            <li><a href="https://www.st.com/resource/en/datasheet/1n5817.pdf" target="_blank">1N5819 Flyback Diode Datasheet</a></li>
+            <li><a href="https://hobbycomponents.com/capacitors/1111-1000uf-10v-electrolytic-capacitor" target="_blank">1000µF Electrolytic Capacitor Datasheet</a></li>
+            <li><a href="https://www.farnell.com/datasheets/1558295.pdf" target="_blank">10µF Ceramic Capacitor Datasheet</a></li>
+            <li><a href="https://media.digikey.com/pdf/Data%20Sheets/Adafruit%20PDFs/3777_Web.pdf" target="_blank">12V DC Motor Datasheet</a></li>
+        </ul>
+      </p>
+      <br>
+      Question 3
+      <img src="Question3-5.jpeg"/>
+      <br> PseudoCode
+        <code>
+          <pre>
+            void setup() {
+                pinMode(2, OUTPUT); // Motor 1
+                pinMode(3, OUTPUT);
+                pinMode(4, OUTPUT); // Motor 2
+                pinMode(5, OUTPUT);
+            }
+            
+            void loop() {
+                // Move Both Motors Forward
+                digitalWrite(2, HIGH);
+                digitalWrite(3, LOW);
+                digitalWrite(4, HIGH);
+                digitalWrite(5, LOW);
+                delay(2000);
+            
+                // Move Both Motors Backward
+                digitalWrite(2, LOW);
+                digitalWrite(3, HIGH);
+                digitalWrite(4, LOW);
+                digitalWrite(5, HIGH);
+                delay(2000);
+            
+                // Motor 1 Forward, Motor 2 Backward
+                digitalWrite(2, HIGH);
+                digitalWrite(3, LOW);
+                digitalWrite(4, LOW);
+                digitalWrite(5, HIGH);
+                delay(2000);
+            
+                // Motor 1 Backward, Motor 2 Forward
+                digitalWrite(2, LOW);
+                digitalWrite(3, HIGH);
+                digitalWrite(4, HIGH);
+                digitalWrite(5, LOW);
+                delay(2000);
+            
+                // Stop Both Motors
+                digitalWrite(2, LOW);
+                digitalWrite(3, LOW);
+                digitalWrite(4, LOW);
+                digitalWrite(5, LOW);
+                delay(2000);
+            }
+          </pre>
+        </code>
+  </body>
+</html>
