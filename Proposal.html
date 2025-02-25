@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantPal: Final Project Proposal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .sketch-placeholder {
+            width: 60%;
+            background: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #555;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PlantPal: Final Project Proposal</h1>
+        
+        <h2>Project Concept/Motivation</h2>
+        <p>I want to build a Plant Monitoring System, designed to help users take better care of their houseplants by providing real-time environmental feedback. Using sensors for soil moisture, light levels, and temperature, the system will detect whether the plant needs watering, more sunlight, or a temperature adjustment. The user will receive instant feedback through an RGB LED and LCD display, which will show sensor readings and status messages.</p>
+        <p>I want to make this because I have killed every houseplant I’ve tried raising.</p>
+        
+        <h2>Anticipated Bill of Materials</h2>
+        <ul>
+            <li>RGB LED (to display status of conditions - red for bad, etc.)</li>
+            <li>LCD screen (to display plant status)</li>
+            <li>Moisture sensor (for soil moisture sensing)</li>
+            <li>Thermistor (for temperature sensing)</li>
+            <li>Photoresistor (for light sensing)</li>
+            <li>Assorted resistors (for current-limiting)</li>
+            <li>A houseplant (for tinkering with)</li>
+        </ul>
+        
+        <h2>Timeline and Contingency Plans</h2>
+        <p>In Week 1, I will finalize the design, gather materials, and test individual sensor readings for soil moisture (sensor TBD), light (photoresistor), and temperature (thermistor). Once the sensors are working, I will integrate the LCD display to show sensor values and plant status messages.</p>
+        <p>In Week 2, I will add a LED indicator system (Green = healthy, Yellow = needs attention, Red = critical) and refine the logic to ensure accurate feedback. By mid-week, I will assemble the system into an enclosure or attach it to a plant pot, ensuring it is fully integrated as a product rather than just a breadboard setup. The final days will be spent on testing, debugging, and making refinements before preparing the presentation and submission.</p>
+        <p>One challenge is determining the best method for sensing soil moisture. If I can’t find a reliable solution, I will shift my focus to using a capacitive touch sensor that triggers watering in the plant when touched.</p>
+        
+        <h2>Sketch</h2>
+        <div class="sketch-placeholder">
+            <img src="PlantPalSketch.jpeg" alt="Plant Monitoring System Sketch" width="100%" height="100%">
+        </div>
+    </div>
+</body>
+</html>
