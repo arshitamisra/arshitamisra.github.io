@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantPal: Final Project Proposal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        video {
+            width: 30%; /* Adjust width as needed */
+            height: auto; /* Maintains aspect ratio */
+            max-height: 90vh; /* Prevents video from overflowing */
+            object-fit: contain; /* Ensures the video is fully visible */
+            border-radius: 10px; /* Optional: Adds rounded corners */
+        }
+        .image-container {
+            display: flex;       /* Arrange images in a row */
+            justify-content: center;  /* Center them */
+            gap: 20px;           /* Space between images */
+        }
+        .image-container img {
+            width: 30%;  /* Adjust size */
+            max-width: 300px; /* Prevent oversized images */
+            height: auto; /* Maintain aspect ratio */
+            border: 2px solid black; /* Optional border */
+        }
+        /* Center the schematic and make it 60% of the screen width */
+        .schematic-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .schematic-container img {
+            width: 60%;
+            max-width: 800px; /* Prevents it from getting too big */
+            height: auto;
+            border: 3px solid black; /* Optional border */
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PlantPal🪴: Final Project</h1>
+        
+        <h2>Project Concept</h2>
+        <p>Many people (ME!) struggle with keeping their plants healthy due to forgetfulness and under watering. 
+            Minimal sunlight levels in Seattle, also do not help.</p>
+            
+            <h3>Solution:</h3>
+            <p>PlantPal is a smart plant monitoring system that helps plant owners keep their plants healthy by detecting soil moisture and light levels and providing real time feedback through an LCD display and a DISTRESSING buzzer alert when the plant needs water.</p>
+        
+        <h2>Anticipated Bill of Materials</h2>
+        <ul>
+            <li>Arduino</li>
+            <li>Prototype shield</li>
+            <li>LCD screen (to display plant status)</li>
+            <li>Moisture sensor (for soil moisture sensing)</li>
+            <li>Photoresistor (for light sensing)</li>
+            <li>Active Buzzer (for distressing noise)</li>
+            <li>Assorted resistors (for current-limiting)</li>
+            <li>Jumper wires (for connections)</li>
+            <li>A houseplant (for tinkering with)</li>
+            <li>A potentiometer (to adjust LCD contrast)</li>
+            <li>Cardboard (for the enclosure)</li>
+            <li>Colored paper (for decorating enclosure)</li>
+        </ul>
+        
+        <h2>How it Works</h2>
+            <p>PlantPal is a real-time plant monitoring system that uses an Arduino microcontroller to measure soil moisture and light levels, displaying live sensor data on an LCD screen and triggering a buzzer alert when moisture levels are too low. The system continuously reads values from a soil moisture sensor and a photoresistor (light sensor), processes the data, and determines whether an alert is needed.
+
+            The soil moisture sensor operates by sending an analog signal, which is read via pin A0 on the Arduino and converted into a percentage-based moisture level using a 10-bit Analog-to-Digital Conversion. The moisture threshold is set in the code after calibrating approximate threshholds using 3 of my houseplants, and if the moisture drops below this level, the system triggers the buzzer (connected to D9) by sending a HIGH signal to activate it. The buzzer deactivates when the moisture level is restored above the threshold.
+
+            The photoresistor functions by detecting ambient light intensity. It changes its resistance depending on the amount of light present. More light results in lower resistance and a higher voltage output, while less light increases resistance, leading to a lower voltage. This value is read via pin A1 and mapped to a readable format, displayed on the LCD screen.
+
+            The LCD screen (16x2) is used to provide real-time sensor feedback. The LCD is wired to the Arduino with at least 10 digital pins:
+
+            The Arduino communicates with the LCD using the LiquidCrystal library, which allows it to send characters. The LCD updates continuously with moisture and light values in a structured format, and displays a message saying "Dry!" when the moisture levels are too low.
+
+            Power is supplied through the Arduino’s 5V rail, with the sensors, buzzer, and LCD all operating within the 0-5V range. The LCD’s contrast is manually adjustable via a potentiometer, ensuring clear visibility of data.
+            </p><br>
+            The overall system runs in a loop, following these steps:
+
+            <ol>
+                <li>Read moisture and light sensor values.</li>
+                <li>Convert raw analog readings to a meaningful scale.</li>
+                <li>Update the LCD with current moisture and light levels.</li>
+                <li>Check if moisture is below the threshold; if so, activate the buzzer.</li>
+                <li>Repeat the loop continuously. </li>
+            </ol>
+
+            <h3>Firmware Code</h3>
+            <code>
+                <pre>
+                    #include &lt;LiquidCrystal.h&gt; // Library for the LCD
+
+                    // LCD pins: (RS, E, D4, D5, D6, D7)
+                    LiquidCrystal lcd(7, 8, 2, 3, 4, 5);
+                    
+                    // Pin Assignments
+                    const int moisturePin = A0;  // Moisture sensor
+                    const int lightPin = A1;     // Photoresistor 
+                    const int buzzerPin = 9;     // Buzzer
+                    
+                    // Moisture Threshold
+                    const int moistureThreshold = 10;  // Adjusted based on testing
+                    
+                    void setup() {
+                        Serial.begin(9600);   // Start Serial Monitor
+                        lcd.begin(16, 2);     // Initialize LCD (16x2)
+                        
+                        pinMode(buzzerPin, OUTPUT);
+                        digitalWrite(buzzerPin, LOW);
+                    
+                        lcd.print("PlantPal Ready!");  // Starting message
+                        delay(2000);
+                        lcd.clear();
+                    }
+                    
+                    void loop() {
+                        // Read sensor values
+                        int moistureVal = analogRead(moisturePin); // Read moisture levels
+                        int lightVal = analogRead(lightPin); // Read light levels
+                    
+                        // Print sensor levels to Serial Monitor
+                        Serial.print("Moisture: "); Serial.print(moistureVal);
+                        Serial.print(" | Light: "); Serial.println(lightVal);
+                    
+                        // Display sensor levels on LCD
+                        lcd.setCursor(0, 0);
+                        lcd.print("Moisture: "); lcd.print(moistureVal);
+                        lcd.setCursor(0, 1);
+                        lcd.print("Light: "); lcd.print(lightVal);
+                    
+                        // Conditions to alert user for low moisture levels
+                        if (moistureVal < moistureThreshold) {
+                            digitalWrite(buzzerPin, HIGH); // Activate buzzer if moisture level is too low
+                            lcd.setCursor(9, 1);
+                            lcd.print("Dry!");
+                        } else {
+                            digitalWrite(buzzerPin, LOW);
+                            lcd.setCursor(9, 1);
+                            lcd.print("    "); // Clear alert
+                        }
+                    
+                        delay(1000);  // Wait before next reading for smoother display on LCD
+                    }
+                </pre>
+            </code>
+            <h3>Circuit</h3>
+            <div class="image-container">
+                <img src="finalcircuit1.jpeg">
+                <img src="finalcircuit2.jpeg">
+                <img src="finalcircuit3.jpeg">
+            </div>
+            <h3>Schematic</h3>
+            <div class="schematic-container">
+                <img src="SchematicFinal.jpeg">
+            </div>
+
+
+        <h2>Demo Video</h2>
+            <div class="video">
+                <video controls>
+                    <source src="demovideo.mp4" type="video/mp4">
+                </video>
+            </div>
+    </div>
+</body>
+</html>
